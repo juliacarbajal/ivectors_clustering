@@ -134,7 +134,9 @@ purity      = gather(puritymerge, LDA, purity, c(purityNLDA, purityLDA))
 levels(purity$LDA)[levels(purity$LDA) == "purityNLDA"] <- "pre-LDA"
 levels(purity$LDA)[levels(purity$LDA) == "purityLDA"]  <- "post-LDA"
 
-# PLOT PURITY CURVES
+# PLOT PURITY CURVES #
+plotit = 0
+if (plotit == 1) {
 ggplot(purity, aes(x = Nclusters, y = purity)) +
   geom_line(aes(color = background, linetype = background), size = 1.5) +
   ggtitle(paste("Euclidean distance, method=", clustmethod)) +
@@ -150,20 +152,48 @@ ggplot(purity, aes(x = Nclusters, y = purity)) +
   guides(linetype = guide_legend(keywidth = 3, keyheight = 1),
          colour   = guide_legend(keywidth = 3, keyheight = 1)) +
   theme(axis.title.x = element_text(vjust = -0.2))
+}
 
 purity$linkage = rep(clustmethod,120)
 purity.data = rbind(purity.data,purity)
 
 }
 
+# PERFECT PURITY ####
+# Find the minimum number of clusters required to achieve perfect purity (P = 1)
 purity1 = purity.data %>%
-  filter(purity == 1) %>%
+  filter(purity >0.8) %>%
   group_by(background,LDA,linkage) %>%
   summarise(N = min(Nclusters)) %>%
   ungroup()
 
+# PLOT
 ggplot(purity1,aes(x=background,y=N))+
   geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
   facet_wrap(~LDA)+
   xlab("Background") +
-  ylab("Number of clusters\n") 
+  ylab("Minimum number of clusters for P=1\n")
+
+# AVERAGE PURITY ####
+# Average of purity over all number of clusters
+purity.avg = purity.data %>%
+  group_by(background,LDA,linkage) %>%
+  summarise(Pmean = mean(purity)) %>%
+  ungroup()
+
+# PLOT
+ggplot(purity.avg,aes(x=background,y=Pmean))+
+  geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
+  facet_wrap(~LDA)+
+  xlab("Background") +
+  ylab("Average purity\n")
+
+# PURITY AT K = 2
+purity.k2 = purity.data %>%
+  filter(Nclusters ==2)
+
+ggplot(purity.k2,aes(x=background,y=purity))+
+  geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
+  facet_wrap(~LDA)+
+  xlab("Background") +
+  ylab("Purity at K = 2\n")
