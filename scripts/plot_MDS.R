@@ -8,6 +8,8 @@ library(dplyr)
 library(grid)
 library(gridExtra)
 
+ppi = 400 # Printing resolution for figures
+
 # MAIN DIRECTORY ####
 data.dir = "C:/Users/Julia/Documents/01 - Projects/01 - LSCP/04 - Modeling team stuff/ivectors/bilingual_test_balancedv2_tv150//bilingual_test_balancedv2_tv150/"
 
@@ -21,8 +23,9 @@ names(language) = perUtterancenames
 # MDS ####
 
 # Bilingual background
-setwd(paste(data.dir, "bilingual_background/", sep = ""))
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+data.subfolder = paste(data.dir, "bilingual_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
 # 1. Calculate distances and MDS
 d   = dist(t(m))
@@ -55,8 +58,9 @@ mds.bilLDA$y = scale(mds.bilLDA$y, center = FALSE, scale = max(mds.bilLDA$y, na.
 
 
 # Xitsonga background
-setwd(paste(data.dir, "xitsonga_background/", sep = ""))
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+data.subfolder = paste(data.dir, "xitsonga_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
 # 1.
 d   = dist(t(m))
@@ -89,8 +93,9 @@ mds.xitLDA$y   = scale(mds.xitLDA$y, center = FALSE, scale = max(mds.xitLDA$y, n
 
 
 # English background
-setwd(paste(data.dir, "english_background/", sep = ""))
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+data.subfolder = paste(data.dir, "english_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
 # 1.
 d   = dist(t(m))
@@ -132,7 +137,9 @@ MDS.data$background = factor(MDS.data$background, levels = c("English", "Xitsong
 MDS.data$LDA        = factor(MDS.data$LDA, levels = c("pre-LDA", "post-LDA"))
 
 # PLOT ####
-# png("MDS.png", width=13*ppi, height=7*ppi, res=ppi)
+saveplot = 0 # Set to 1 if saving plot
+
+if (saveplot == 1) png("figures/MDS.png", width=13*ppi, height=7*ppi, res=ppi)
 ggplot(MDS.data, aes(x = x, y = y))+
   geom_point(aes(color = language, shape = language), size = 2.5) +
   facet_grid(LDA ~ background) +
@@ -140,11 +147,11 @@ ggplot(MDS.data, aes(x = x, y = y))+
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(text = element_text(size = 18)) +
   scale_shape_discrete(name = "Language") +
-  xlim(-1.5,1.5)+ylim(-1.5,1.5)+
+  xlim(-1.5,1.5)+ylim(-1.5,1.2)+
   xlab("Coordinate 1") +
   ylab("Coordinate 2") +
   ggtitle("Background") +
   theme(plot.title = element_text(size = 18, vjust = 1)) +
   theme(axis.title.x = element_text(vjust = -0.1)) +
   theme(axis.title.y = element_text(vjust = 0.9))
-# dev.off()
+if (saveplot == 1) dev.off()
