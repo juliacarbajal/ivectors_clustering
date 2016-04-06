@@ -16,7 +16,7 @@ ClusterPurity <- function(clusters, classes) {
   sum(apply(table(classes, clusters), 2, max)) / length(clusters)
 }
 
-# IVECTOR LABELS (SPEAKER & LANGUAGE)
+# LABELS (SPEAKER & LANGUAGE) ####
 perUtterancenames = c(paste("E_", (rep(1, 10))%o%((1:10)), ":", ((1:10))%o%(rep(1, 10)), sep = ""), paste("X_",(rep(1,10))%o%((1:10)),":",((1:10))%o%(rep(1,10)),sep=""))
 speakers = gsub(":.*", "", perUtterancenames)
 names(speakers) = perUtterancenames
@@ -34,77 +34,79 @@ for (cmethod in linkage.options) {
   clustmethod = cmethod #"mcquitty"
 
 # English background
-setwd(paste(data.dir, "english_background/", sep = "")) 
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+data.subfolder = paste(data.dir, "english_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
-# Hierarchical clustering
-hcE = hclust(dist(t(m)), method = clustmethod)
-#plot(hcE,labels=speakers)
+  # Hierarchical clustering
+  hcE = hclust(dist(t(m)), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-# Cut tree at different levels (k = number of clusters) and calculate their purity
-groupsEeng = cutree(hcE, k = 1:200)
-purityEeng = vector()
-for (i in 1:200) purityEeng = c(purityEeng, ClusterPurity(groupsEeng[, i], language))
+  # Cut tree at different levels (k = number of clusters) and calculate their purity
+  groupsEeng = cutree(hcE, k = 1:200)
+  purityEeng = vector()
+  for (i in 1:200) purityEeng = c(purityEeng, ClusterPurity(groupsEeng[, i], language))
 
-# English With LDA (same process after projecting on LDA dimensions)
-l = lda(t(m), speakers)
-project = t(m)%*%l$scaling
-x1 = project #[, 1:5, drop = F]
+  # English With LDA (same process after projecting on LDA dimensions)
+  l = lda(t(m), speakers)
+  project = t(m)%*%l$scaling
+  x1 = project #[, 1:5, drop = F]
 
-hcE = hclust(dist(x1), method = clustmethod)
-#plot(hcE,labels=speakers)
+  hcE = hclust(dist(x1), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-groupsEengLDA = cutree(hcE, k = 1:200)
-purityEengLDA = vector()
-for (i in 1:200) purityEengLDA = c(purityEengLDA, ClusterPurity(groupsEengLDA[, i], language))
+  groupsEengLDA = cutree(hcE, k = 1:200)
+  purityEengLDA = vector()
+  for (i in 1:200) purityEengLDA = c(purityEengLDA, ClusterPurity(groupsEengLDA[, i], language))
 
 
 # Xitsonga background
-setwd(paste(data.dir,"xitsonga_background/", sep = ""))
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+data.subfolder = paste(data.dir, "xitsonga_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
-hcE = hclust(dist(t(m)), method = clustmethod)
-#plot(hcE,labels=speakers)
+  hcE = hclust(dist(t(m)), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-groupsExit = cutree(hcE, k = 1:200)
-purityExit = vector()
-for (i in 1:200) purityExit = c(purityExit, ClusterPurity(groupsExit[, i], language))
+  groupsExit = cutree(hcE, k = 1:200)
+  purityExit = vector()
+  for (i in 1:200) purityExit = c(purityExit, ClusterPurity(groupsExit[, i], language))
 
-# Xitsonga With LDA
-l = lda(t(m), speakers)
-project = t(m)%*%l$scaling
-x1 = project #[,1:5,drop=F]
+  # Xitsonga With LDA
+  l = lda(t(m), speakers)
+  project = t(m)%*%l$scaling
+  x1 = project #[,1:5,drop=F]
 
-hcE = hclust(dist(x1), method = clustmethod)
-#plot(hcE,labels=speakers)
+  hcE = hclust(dist(x1), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-groupsExitLDA = cutree(hcE, k = 1:200)
-purityExitLDA = vector()
-for (i in 1:200) purityExitLDA = c(purityExitLDA, ClusterPurity(groupsExitLDA[, i], language))
+  groupsExitLDA = cutree(hcE, k = 1:200)
+  purityExitLDA = vector()
+  for (i in 1:200) purityExitLDA = c(purityExitLDA, ClusterPurity(groupsExitLDA[, i], language))
 
 
 # Bilingual background
+data.subfolder = paste(data.dir, "bilingual_background/", sep = "")
+datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
+m = readMat(datafile); m = m[[1]]
 
-setwd(paste(data.dir, "bilingual_background/", sep = ""))
-m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
+  hcE = hclust(dist(t(m)), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-hcE = hclust(dist(t(m)), method = clustmethod)
-#plot(hcE,labels=speakers)
+  groupsEbil = cutree(hcE, k = 1:200)
+  purityEbil = vector()
+  for (i in 1:200) purityEbil = c(purityEbil, ClusterPurity(groupsEbil[, i], language))
 
-groupsEbil = cutree(hcE, k = 1:200)
-purityEbil = vector()
-for (i in 1:200) purityEbil = c(purityEbil, ClusterPurity(groupsEbil[, i], language))
+  # Bilingual With LDA
+  l = lda(t(m), speakers)
+  project = t(m)%*%l$scaling
+  x1 = project #[,1:5,drop=F]
+  hcE = hclust(dist(x1), method = clustmethod)
+  #plot(hcE,labels=speakers)
 
-# Bilingual With LDA
-l = lda(t(m), speakers)
-project = t(m)%*%l$scaling
-x1 = project #[,1:5,drop=F]
-hcE = hclust(dist(x1), method = clustmethod)
-#plot(hcE,labels=speakers)
-
-groupsEbilLDA = cutree(hcE, k = 1:200)
-purityEbilLDA = vector()
-for (i in 1:200) purityEbilLDA = c(purityEbilLDA, ClusterPurity(groupsEbilLDA[, i], language))
+  groupsEbilLDA = cutree(hcE, k = 1:200)
+  purityEbilLDA = vector()
+  for (i in 1:200) purityEbilLDA = c(purityEbilLDA, ClusterPurity(groupsEbilLDA[, i], language))
 
 
 # PUT EVERYTHING INTO A DATA FRAME
