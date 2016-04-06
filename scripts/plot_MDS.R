@@ -25,7 +25,7 @@ setwd(paste(data.dir, "bilingual_background/", sep = ""))
 m = readMat("model_ivs1_perUtterance.mat"); m = m[[1]]
 
 # 1. Calculate distances and MDS
-d = dist(t(m))
+d   = dist(t(m))
 fit = cmdscale(d, eig = T, k = 2)
 x   = fit$points[, 1] # MDS coordinate 1
 y   = fit$points[, 2] # MDS coordinate 2
@@ -120,3 +120,31 @@ mds.engLDA$background = rep("English", 200)
 mds.engLDA$LDA        = rep("post-LDA", 200)
 mds.engLDA$x   = scale(mds.engLDA$x, center = FALSE, scale = max(mds.engLDA$x, na.rm = TRUE))
 mds.engLDA$y   = scale(mds.engLDA$y, center = FALSE, scale = max(mds.engLDA$y, na.rm = TRUE))
+
+
+# Join all MDS in one dataframe per LDA
+MDS.data_preLDA  = rbind(mds.eng, mds.xit, mds.bil)
+MDS.data_postLDA = rbind(mds.engLDA, mds.xitLDA, mds.bilLDA)
+
+# Join everything
+MDS.data = rbind(MDS.data_preLDA, MDS.data_postLDA)
+MDS.data$background = factor(MDS.data$background, levels = c("English", "Xitsonga", "Mixed"))
+MDS.data$LDA        = factor(MDS.data$LDA, levels = c("pre-LDA", "post-LDA"))
+
+# PLOT ####
+# png("MDS.png", width=13*ppi, height=7*ppi, res=ppi)
+ggplot(MDS.data, aes(x = x, y = y))+
+  geom_point(aes(color = language, shape = language), size = 2.5) +
+  facet_grid(LDA ~ background) +
+  scale_color_manual(name = "Language", values = c("black", "grey48")) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(text = element_text(size = 18)) +
+  scale_shape_discrete(name = "Language") +
+  xlim(-1.5,1.5)+ylim(-1.5,1.5)+
+  xlab("Coordinate 1") +
+  ylab("Coordinate 2") +
+  ggtitle("Background") +
+  theme(plot.title = element_text(size = 18, vjust = 1)) +
+  theme(axis.title.x = element_text(vjust = -0.1)) +
+  theme(axis.title.y = element_text(vjust = 0.9))
+# dev.off()
