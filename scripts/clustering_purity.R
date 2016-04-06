@@ -155,7 +155,7 @@ purity.data = rbind(purity.data,purity)
 }
 
 purity1 = purity.data %>%
-  filter(purity==1) %>%
+  filter(purity == 1) %>%
   group_by(background,LDA,linkage) %>%
   summarise(N = min(Nclusters)) %>%
   ungroup()
