@@ -8,6 +8,8 @@ library(dplyr)
 library(grid)
 library(gridExtra)
 
+ppi = 400
+
 # MAIN DIRECTORY ####
 data.dir = "C:/Users/Julia/Documents/01 - Projects/01 - LSCP/04 - Modeling team stuff/ivectors/bilingual_test_balancedv2_tv150//bilingual_test_balancedv2_tv150/"
 
@@ -162,33 +164,53 @@ purity.data = rbind(purity.data,purity)
 # PERFECT PURITY ####
 # Find the minimum number of clusters required to achieve perfect purity (P = 1)
 purity1 = purity.data %>%
-  filter(purity >0.8) %>%
+  filter(purity ==1) %>%
   group_by(background,LDA,linkage) %>%
   summarise(N = min(Nclusters)) %>%
   ungroup()
 
 # PLOT
-ggplot(purity1,aes(x=background,y=N))+
-  geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
+saveit = 1
+if (saveit == 1) png("figures/Purity1.png", width=7*ppi, height=6*ppi, res=ppi)
+ggplot(purity1,aes(x=background,y=N,group=linkage)) +
+  geom_jitter(aes(shape=background), size = 4, position = position_jitter(width = 0.12, height = 0))+
   facet_wrap(~LDA)+
   xlab("Background") +
-  ylab("Minimum number of clusters for P=1\n")
+  ylab("Number of clusters\n") +
+  theme_bw() +
+  theme(legend.position="none") +
+  theme(text = element_text(size = 18))
+  #theme(legend.justification = c(1, 1), legend.position = c(1, 1))
+if (saveit == 1) dev.off()
+
+# ggplot(subset(purity1,LDA=="post-LDA"),aes(x=background,y=N))+
+#   geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0)) +
+#   ggtitle("Zoom over post-LDA")
+
 
 # AVERAGE PURITY ####
 # Average of purity over all number of clusters
 purity.avg = purity.data %>%
-  group_by(background,LDA,linkage) %>%
+  filter(Nclusters <= 20) %>%
+  group_by(background, LDA, linkage) %>%
   summarise(Pmean = mean(purity)) %>%
   ungroup()
 
 # PLOT
-ggplot(purity.avg,aes(x=background,y=Pmean))+
+saveit = 0
+if (saveit == 1) png("figures/PurityAvg.png", width=13*ppi, height=7*ppi, res=ppi)
+ggplot(purity.avg,aes(x=background,y=Pmean,group=linkage))+
   geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
   facet_wrap(~LDA)+
   xlab("Background") +
-  ylab("Average purity\n")
+  ylab("Average purity\n") +
+  theme_bw() +
+  theme(legend.position="none")+
+  theme(text = element_text(size = 18))
+  #theme(legend.justification = c(1, 0), legend.position = c(1, 0))
+if (saveit == 1) dev.off()
 
-# PURITY AT K = 2
+# PURITY AT K = 2 ####
 purity.k2 = purity.data %>%
   filter(Nclusters ==2)
 
@@ -196,4 +218,5 @@ ggplot(purity.k2,aes(x=background,y=purity))+
   geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0))+
   facet_wrap(~LDA)+
   xlab("Background") +
-  ylab("Purity at K = 2\n")
+  ylab("Purity at K = 2\n") +
+  ggtitle("Purity at K=2")
