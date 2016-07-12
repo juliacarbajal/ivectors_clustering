@@ -182,7 +182,10 @@ ggplot(MDS.dataB,aes(x=x,y=y)) + geom_point(aes(color = language, shape = langua
 
 
 # PLOT OF THEM ALL TOGETHER! ####
+# Join everything
 MDS.data = rbind(MDS.dataE,MDS.dataX,MDS.dataB)
+MDS.data$background = factor(MDS.data$background, levels = c("English", "Xitsonga", "Mixed"))
+MDS.data$LDA        = factor(MDS.data$LDA, levels = c("pre-LDA", "post-LDA"))
 
 png("figures/MDS_scaleSD_extra_speakers.png", width=13*ppi, height=5*ppi, res=ppi)
 ggplot(subset(MDS.data,LDA=="post-LDA"),aes(x=x,y=y)) + geom_point(aes(color = language, shape = language), size = 2.5) +
