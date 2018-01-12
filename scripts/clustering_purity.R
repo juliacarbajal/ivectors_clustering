@@ -170,8 +170,8 @@ purity1 = purity.data %>%
   ungroup()
 
 # PLOT
-saveit = 1
-if (saveit == 1) png("figures/Purity1.png", width=8*ppi, height=6*ppi, res=ppi)
+saveit = 0
+if (saveit == 1) png("figures/Purity1v2.png", width=7*ppi, height=5*ppi, res=ppi)
 ggplot(purity1,aes(x=background,y=N)) +
   geom_jitter(aes(color=background), size = 4, position = position_jitter(width = 0.12, height = 0))+
   facet_wrap(~LDA)+
@@ -180,15 +180,15 @@ ggplot(purity1,aes(x=background,y=N)) +
   scale_color_manual(name = "Background", values = c("black", "grey60", "grey30")) +
   theme_bw() +
   theme(legend.position="none") +
-  theme(text = element_text(size = 18)) +
+  theme(text = element_text(size = 19)) +
   theme(axis.title.x = element_text(vjust = -0.2)) +
   theme(axis.title.y = element_text(vjust = 1))
   #theme(legend.justification = c(1, 1), legend.position = c(1, 1))
 if (saveit == 1) dev.off()
 
-# ggplot(subset(purity1,LDA=="post-LDA"),aes(x=background,y=N))+
-#   geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0)) +
-#   ggtitle("Zoom over post-LDA")
+ggplot(subset(purity1,LDA=="post-LDA"),aes(x=background,y=N))+
+  geom_jitter(aes(shape=background), size = 4, position=position_jitter(width = 0.1, height = 0)) +
+  ggtitle("Zoom over post-LDA")
 
 
 # AVERAGE PURITY ####
@@ -200,8 +200,8 @@ purity.avg = purity.data %>%
   ungroup()
 
 # PLOT
-saveit = 1
-if (saveit == 1) png("figures/PurityAvg.png", width=8*ppi, height=6*ppi, res=ppi)
+saveit = 0
+if (saveit == 1) png("figures/PurityAvgv2.png", width=7*ppi, height=5*ppi, res=ppi)
 ggplot(purity.avg,aes(x=background,y=Pmean))+
   geom_jitter(aes(color=background), size = 4, position=position_jitter(width = 0.1, height = 0)) +
   facet_wrap(~LDA)+
@@ -210,7 +210,7 @@ ggplot(purity.avg,aes(x=background,y=Pmean))+
   scale_color_manual(name = "Background", values = c("black", "grey60", "grey30")) +
   theme_bw() +
   theme(legend.position="none") +
-  theme(text = element_text(size = 18)) +
+  theme(text = element_text(size = 19)) +
   theme(axis.title.x = element_text(vjust = -0.2)) +
   theme(axis.title.y = element_text(vjust = 1))
   #theme(legend.justification = c(1, 0), legend.position = c(1, 0))

@@ -38,6 +38,11 @@ m2 = cbind(m,mextra)
 
 #Perform LDA
 l       = lda(t(m), language[1:200])
+
+# Evaluate with 4 extra speakers:
+predict(l, t(mextra))$class
+
+# Project
 project = t(m2)%*%l$scaling
 x1      = project #[,1:19,drop=F]
 
@@ -70,6 +75,11 @@ m2 = cbind(m,mextra)
 
 #Perform LDA
 l       = lda(t(m), language[1:200])
+
+# Evaluate with 4 extra speakers:
+predict(l, t(mextra))$class
+
+# Project
 project = t(m2)%*%l$scaling
 x1      = project #[,1:19,drop=F]
 
@@ -104,6 +114,11 @@ m2 = cbind(m,mextra)
 
 #Perform LDA
 l       = lda(t(m), language[1:200])
+
+# Evaluate with 4 extra speakers:
+predict(l, t(mextra))$class
+
+# Project
 project = t(m2)%*%l$scaling
 x1      = project #[,1:19,drop=F]
 
