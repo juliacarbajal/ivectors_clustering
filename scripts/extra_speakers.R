@@ -11,7 +11,7 @@ library(gridExtra)
 ppi = 400 # Printing resolution for figures
 
 # MAIN DIRECTORY ####
-data.dir = "C:/Users/Julia/Documents/01 - Projects/01 - LSCP/04 - Modeling team stuff/ivectors/bilingual_test_balancedv2_tv150//bilingual_test_balancedv2_tv150/"
+data.dir = "data/bilingual_test_balancedv2_tv150/"
 
 # LABELS (SPEAKER & LANGUAGE) ####
 perUtterancenames = c(paste("E_", (rep(1, 10))%o%((1:10)), ":", ((1:10))%o%(rep(1, 10)), sep = ""), paste("X_",(rep(1,10))%o%((1:10)),":",((1:10))%o%(rep(1,10)),sep=""), paste("E2_",(rep(1,10))%o%((1:2)),":",((1:10))%o%(rep(1,2)),sep=""), paste("X2_",(rep(1,10))%o%((1:2)),":",((1:10))%o%(rep(1,2)),sep=""))
@@ -25,9 +25,9 @@ data.subfolder = paste(data.dir, "english_background/", sep = "")
 datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
 m = readMat(datafile); m = m[[1]]
 
-mextraE = readMat('extra_speakers/extra_english_speakers_english_background.mat')
+mextraE = readMat('data/extra_speakers/extra_english_speakers_english_background.mat')
 mextraE = mextraE[[1]]
-mextraX = readMat('extra_speakers/extra_xitsonga_speakers_english_background.mat')
+mextraX = readMat('data/extra_speakers/extra_xitsonga_speakers_english_background.mat')
 mextraX = mextraX[[1]]
 
 mextra = cbind(mextraE,mextraX)
@@ -79,9 +79,9 @@ data.subfolder = paste(data.dir, "xitsonga_background/", sep = "")
 datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
 m = readMat(datafile); m = m[[1]]
 
-mextraE = readMat('extra_speakers/extra_english_speakers_xitsonga_background.mat')
+mextraE = readMat('data/extra_speakers/extra_english_speakers_xitsonga_background.mat')
 mextraE = mextraE[[1]]
-mextraX = readMat('extra_speakers/extra_xitsonga_speakers_xitsonga_background.mat')
+mextraX = readMat('data/extra_speakers/extra_xitsonga_speakers_xitsonga_background.mat')
 mextraX = mextraX[[1]]
 
 mextra = cbind(mextraE,mextraX)
@@ -132,9 +132,9 @@ data.subfolder = paste(data.dir, "bilingual_background/", sep = "")
 datafile = paste(data.subfolder, "model_ivs1_perUtterance.mat", sep = "")
 m = readMat(datafile); m = m[[1]]
 
-mextraE = readMat('extra_speakers/extra_english_speakers_bilingual_background.mat')
+mextraE = readMat('data/extra_speakers/extra_english_speakers_bilingual_background.mat')
 mextraE = mextraE[[1]]
-mextraX = readMat('extra_speakers/extra_xitsonga_speakers_bilingual_background.mat')
+mextraX = readMat('data/extra_speakers/extra_xitsonga_speakers_bilingual_background.mat')
 mextraX = mextraX[[1]]
 
 mextra = cbind(mextraE,mextraX)

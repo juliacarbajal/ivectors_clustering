@@ -11,7 +11,7 @@ library(gridExtra)
 ppi = 400 # Printing resolution for figures
 
 # MAIN DIRECTORY ####
-data.dir = "C:/Users/Julia/Documents/01 - Projects/01 - LSCP/04 - Modeling team stuff/ivectors/bilingual_test_balancedv2_tv150//bilingual_test_balancedv2_tv150/"
+data.dir = "data/bilingual_test_balancedv2_tv150/"
 
 # LABELS (SPEAKER & LANGUAGE) ####
 perUtterancenames = c(paste("E_", (rep(1, 10))%o%((1:10)), ":", ((1:10))%o%(rep(1, 10)), sep = ""), paste("X_",(rep(1,10))%o%((1:10)),":",((1:10))%o%(rep(1,10)),sep=""))

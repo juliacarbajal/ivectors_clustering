@@ -11,7 +11,7 @@ library(gridExtra)
 ppi = 400
 
 # MAIN DIRECTORY ####
-data.dir = "C:/Users/Julia/Documents/01 - Projects/01 - LSCP/04 - Modeling team stuff/ivectors/bilingual_test_balancedv2_tv150//bilingual_test_balancedv2_tv150/"
+data.dir = "data/bilingual_test_balancedv2_tv150/"
 
 # DEFINE FUNCTIONS ####
 ClusterPurity <- function(clusters, classes) {
